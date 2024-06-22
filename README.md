@@ -14,7 +14,7 @@ JWT_SECRETKEY=<JWT secret key>
 ```
 Endpoints:
 
-1. Student Registration
+1. Student Registration  
 POST `/auth/registration`  
 REQUEST BODY
 ```
@@ -25,7 +25,7 @@ REQUEST BODY
 }
 ```
 
-2. Student Login
+2. Student Login  
 POST `/auth/login`  
 REQUEST BODY
 ```
@@ -35,7 +35,7 @@ REQUEST BODY
 }
 ```
 
-3. Student Logout
+3. Student Logout  
 POST `/auth/logout`  
 REQUEST BODY
 ```
@@ -44,14 +44,14 @@ REQUEST BODY
 }
 ```
 
-4. Student List
+4. Student List  
 GET `/student`  
 REQUEST HEADER
 ```
 "Authorization":"Bearer <JWT token>"
 ```
 
-5. Student Search by Name
+5. Student Search by Name  
 POST `/search`  
 REQUEST HEADER
 ```
