@@ -25,4 +25,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
     @Query(value = "SELECT * FROM students s WHERE s.username = :username", nativeQuery = true)
     public Optional<Student> getStudentByUsername(String username);
+
+    @Query(value = "SELECT * FROM students s WHERE s.student_name ILIKE %:name%", nativeQuery = true)
+    public List<Student> searchStudentsByName(String name);
 }

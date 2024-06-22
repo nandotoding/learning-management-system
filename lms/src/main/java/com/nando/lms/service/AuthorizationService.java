@@ -9,6 +9,6 @@ import com.nando.lms.model.response.data.TokenResponseData;
 public interface AuthorizationService {
     public StudentResponseData registerStudent(StudentRequest studentRequest);
     public TokenResponseData loginStudent(StudentCredentialRequest studentCredentialRequest);
+    public StudentResponseData getStudentByUsername(String username);
     public boolean logoutStudent(TokenRequest tokenRequest);
-//    public boolean isTokenRevoked(String token);
 }

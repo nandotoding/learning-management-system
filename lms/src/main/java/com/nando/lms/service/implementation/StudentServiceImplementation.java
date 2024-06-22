@@ -72,7 +72,11 @@ public class StudentServiceImplementation implements StudentService {
     }
 
     @Override
-    public StudentResponseData addStudent(StudentRequest studentRequest) {
+    public StudentResponseData addStudent(StudentRequest studentRequest, String token) {
+        if (jwtUtil.isTokenRevoked(token)) {
+            throw new UnauthorizedException("Token revoked");
+        }
+
         if (studentRequest == null) {
             throw new BadRequestException("Empty request body");
         }
@@ -113,7 +117,11 @@ public class StudentServiceImplementation implements StudentService {
     }
 
     @Override
-    public StudentResponseData getStudentByUsername(String username) {
+    public StudentResponseData getStudentByUsername(String username, String token) {
+        if (jwtUtil.isTokenRevoked(token)) {
+            throw new UnauthorizedException("Token revoked");
+        }
+
         Student student = studentRepository.getStudentByUsername(username).orElse(null);
 
         if (student == null) {
@@ -121,5 +129,21 @@ public class StudentServiceImplementation implements StudentService {
         }
 
         return new StudentResponseData(student.getId(), student.getUsername(), student.getStudentName());
+    }
+
+    @Override
+    public List<StudentResponseData> searchStudentsByName(String name, String token) {
+        if (jwtUtil.isTokenRevoked(token)) {
+            throw new UnauthorizedException("Token revoked");
+        }
+
+        List<StudentResponseData> studentResponseDataList = new ArrayList<>();
+        List<Student> studentList = studentRepository.searchStudentsByName(name);
+
+        for (Student s : studentList) {
+            studentResponseDataList.add(new StudentResponseData(s.getId(), s.getUsername(), s.getStudentName()));
+        }
+
+        return studentResponseDataList;
     }
 }
