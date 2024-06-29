@@ -14,8 +14,8 @@ JWT_SECRETKEY=<JWT secret key>
 ```
 API Endpoints:
 
-1. Register Student Account
-   POST `/auth/registration`
+1. Register Student Account  
+   POST `/auth/registration`  
    REQUEST BODY
    ```
    {
@@ -25,8 +25,8 @@ API Endpoints:
    }
    ```
 
-2. Login as Student
-   POST `/auth/login`
+2. Login as Student  
+   POST `/auth/login`  
    REQUEST BODY
    ```
    {
@@ -35,8 +35,8 @@ API Endpoints:
    }
    ```
 
-3. Logout Student Session
-   POST `/auth/logout`
+3. Logout Student Session  
+   POST `/auth/logout`  
    REQUEST BODY
    ```
    {
@@ -44,15 +44,15 @@ API Endpoints:
    }
    ```
 
-4. List All Students
-   GET `/student`
+4. List All Students  
+   GET `/student`  
    REQUEST HEADER
    ```
    "Authorization":"Bearer <JWT token>"
    ```
 
-5. Search Students by Name
-   POST `/search`
+5. Search Students by Name  
+   POST `/search`  
    REQUEST HEADER
    ```
    "Authorization":"Bearer <JWT token>"
@@ -62,15 +62,15 @@ API Endpoints:
    {"query":"<name query>"}
    ```
 
-6. List Student's Courses
-   GET `/{username}`
+6. List Student's Courses  
+   GET `/{username}`  
    REQUEST HEADER
    ```
    "Authorization":"Bearer <JWT token>"
    ```
 
-7. Take Course
-   POST `/{username}/add-course`
+7. Take Course  
+   POST `/{username}/add-course`  
    REQUEST HEADER
    ```
    "Authorization":"Bearer <JWT token>"
