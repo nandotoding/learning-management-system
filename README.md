@@ -12,9 +12,9 @@ DB_USERNAME=<database username>
 DB_PASSWORD=<database password>
 JWT_SECRETKEY=<JWT secret key>
 ```
-Endpoints:
+API Endpoints:
 
-1. Student Registration  
+1. Register Student Account  
 POST `/auth/registration`  
 REQUEST BODY
 ```
@@ -25,7 +25,7 @@ REQUEST BODY
 }
 ```
 
-2. Student Login  
+2. Login as Student  
 POST `/auth/login`  
 REQUEST BODY
 ```
@@ -35,7 +35,7 @@ REQUEST BODY
 }
 ```
 
-3. Student Logout  
+3. Logout Student Session  
 POST `/auth/logout`  
 REQUEST BODY
 ```
@@ -44,14 +44,14 @@ REQUEST BODY
 }
 ```
 
-4. Student List  
+4. List All Students   
 GET `/student`  
 REQUEST HEADER
 ```
 "Authorization":"Bearer <JWT token>"
 ```
 
-5. Student Search by Name  
+5. Search Students by Name  
 POST `/search`  
 REQUEST HEADER
 ```
@@ -60,4 +60,22 @@ REQUEST HEADER
 REQUEST BODY
 ```
 {"query":"<name query>"}
+```
+
+6. List Student's Courses
+GET `/{username}`
+REQUEST HEADER
+```
+"Authorization":"Bearer <JWT token>"
+```
+
+7. Take Course
+POST `/{username}/add-course`
+REQUEST HEADER
+```
+"Authorization":"Bearer <JWT token>"
+```
+REQUEST BODY
+```
+{"courseId":"<course ID>"}
 ```
