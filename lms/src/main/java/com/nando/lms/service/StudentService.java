@@ -12,8 +12,8 @@ public interface StudentService {
     public List<StudentResponseData> getAllStudents(String token);
     public StudentResponseData getStudentById(String id, String token);
     public StudentResponseData addStudent(StudentRequest studentRequest, String token);
-    public StudentCourseResponseData getStudentWithCourses(String id, String token);
-    public StudentCourseResponseData addStudentCourse(Student student, Course course, String token);
+    public StudentCourseResponseData getStudentWithCourses(String username, String token);
+    public StudentCourseResponseData addStudentCourse(String studentUsername, String courseId, String token);
     public StudentResponseData getStudentByUsername(String username, String token);
     public List<StudentResponseData> searchStudentsByName(String name, String token);
 }

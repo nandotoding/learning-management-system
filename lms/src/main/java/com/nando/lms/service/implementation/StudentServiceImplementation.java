@@ -3,11 +3,14 @@ package com.nando.lms.service.implementation;
 import com.nando.lms.exception.BadRequestException;
 import com.nando.lms.exception.NotFoundException;
 import com.nando.lms.exception.UnauthorizedException;
+import com.nando.lms.model.dto.CourseDTO;
 import com.nando.lms.model.entity.Course;
 import com.nando.lms.model.entity.Student;
+import com.nando.lms.model.entity.StudentCourse;
 import com.nando.lms.model.request.StudentRequest;
 import com.nando.lms.model.response.data.StudentCourseResponseData;
 import com.nando.lms.model.response.data.StudentResponseData;
+import com.nando.lms.repository.CourseRepository;
 import com.nando.lms.repository.StudentCourseRepository;
 import com.nando.lms.repository.StudentRepository;
 import com.nando.lms.service.StudentService;
@@ -22,12 +25,14 @@ import java.util.UUID;
 @Service
 public class StudentServiceImplementation implements StudentService {
     private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
     private final StudentCourseRepository studentCourseRepository;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public StudentServiceImplementation(StudentRepository studentRepository, StudentCourseRepository studentCourseRepository, JwtUtil jwtUtil) {
+    public StudentServiceImplementation(StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepository, JwtUtil jwtUtil) {
         this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
         this.studentCourseRepository = studentCourseRepository;
         this.jwtUtil = jwtUtil;
     }
@@ -91,29 +96,51 @@ public class StudentServiceImplementation implements StudentService {
     }
 
     @Override
-    public StudentCourseResponseData getStudentWithCourses(String id, String token) {
+    public StudentCourseResponseData getStudentWithCourses(String username, String token) {
         if (jwtUtil.isTokenRevoked(token)) {
             throw new UnauthorizedException("Token revoked");
         }
 
-        Student student = studentRepository.getStudentById(id).orElse(null);
+        Student student = studentRepository.getStudentByUsername(username).orElse(null);
 
         if (student == null) {
             throw new NotFoundException("Student not found");
         }
 
-        List<Course> courses = studentCourseRepository.getByStudentId(id);
-        return new StudentCourseResponseData(id, student.getUsername(), student.getStudentName(), courses);
+        List<CourseDTO> coursesDTO = studentCourseRepository.getByStudentId(student.getId());
+        List<Course> courses = new ArrayList<>();
+
+        for (CourseDTO courseDTO : coursesDTO) {
+            Course course = new Course();
+            course.setId(courseDTO.getId());
+            course.setCourseName(courseDTO.getCourseName());
+            courses.add(course);
+        }
+
+        return new StudentCourseResponseData(student.getId(), student.getUsername(), student.getStudentName(), courses);
     }
 
     @Override
-    public StudentCourseResponseData addStudentCourse(Student student, Course course, String token) {
+    public StudentCourseResponseData addStudentCourse(String studentUsername, String courseId, String token) {
         if (jwtUtil.isTokenRevoked(token)) {
             throw new UnauthorizedException("Token revoked");
         }
 
+        Student student = studentRepository.getStudentByUsername(studentUsername).orElse(null);
+        Course course = courseRepository.getCourseById(courseId).orElse(null);
+
+        if (student == null || course == null) {
+            throw new NotFoundException("Student or Course not registered");
+        }
+
+        List<StudentCourse> studentCourses = studentCourseRepository.getByStudentIdAndCourseId(student.getId(), course.getId());
+
+        if (studentCourses.size() != 0) {
+            throw new BadRequestException("Course already taken");
+        }
+
         studentCourseRepository.addStudentCourse(UUID.randomUUID().toString(), student.getId(), course.getId());
-        return getStudentWithCourses(student.getId(), token);
+        return getStudentWithCourses(student.getUsername(), token);
     }
 
     @Override
